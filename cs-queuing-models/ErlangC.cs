@@ -31,6 +31,7 @@ namespace QueueingModels
         public double Load
         {
             get { return m_a; }
+            set { m_a = value; }
         }
 
         //number of servers/agents

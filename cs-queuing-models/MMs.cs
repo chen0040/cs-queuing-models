@@ -23,7 +23,7 @@ namespace QueueingModels
 
         //mean service rate for overral system (expected number of customers completing service per unit time) 
         protected double m_mu;
-        public double mu
+        public double MeanServiceRate
         {
             get
             {
@@ -34,7 +34,7 @@ namespace QueueingModels
 
         // number of servers
         protected int m_s;
-        public int s
+        public int NumberOfServers
         {
             get
             {
@@ -45,7 +45,7 @@ namespace QueueingModels
 
         // utilization factor rho=lambda / (s * mu)
         protected double m_rho;
-        public double rho
+        public double UtilitizationFactor
         {
             get
             {
@@ -55,7 +55,7 @@ namespace QueueingModels
 
         // expected queue length (excludes customers being served)
         protected double m_Lq;
-        public double Lq
+        public double ExpectedQueueLength
         {
             get
             {
@@ -65,7 +65,7 @@ namespace QueueingModels
 
         //expected waiting time in queue (excludees service time) for each individual
         protected double m_Wq;
-        public double Wq
+        public double ExpectedWaitingTimeInQueue
         {
             get
             {
@@ -75,7 +75,7 @@ namespace QueueingModels
 
         //expected number of customers in queueing system
         protected double m_L;
-        public double L
+        public double ExpectedNumberOfCustomersInQueueingSystem
         {
             get
             {
@@ -85,7 +85,7 @@ namespace QueueingModels
 
         // expected value of waiting time in system (includes service time) for each individual customer.
         protected double m_W;
-        public double W
+        public double ExpectedWaitingTimeInSystem
         {
             get
             {
@@ -95,7 +95,7 @@ namespace QueueingModels
 
         // probability of Wq == 0, i.e., P{Wq=0}
         protected double m_PWq0;
-        public double PWq0
+        public double ProbabilityForNoWaitingTimeInQueue
         {
             get
             {
@@ -105,7 +105,7 @@ namespace QueueingModels
 
         //max number of customers in a queueing system
         private int m_N;
-        public int N
+        public int MaximumNumberOfCustomersInQueueingSystem
         {
             get { return m_N; }
             set { m_N = value; }
@@ -113,7 +113,7 @@ namespace QueueingModels
 
         //load
         private double m_a;
-        public double a
+        public double Load
         {
             get { return m_a; }
             set { m_a = value; }
@@ -121,33 +121,33 @@ namespace QueueingModels
 
         public override void Build()
         {
-            m_rho = MeanArrivalRate / (s * mu);
-            m_a = MeanArrivalRate / mu;
+            m_rho = MeanArrivalRate / (NumberOfServers * MeanServiceRate);
+            m_a = MeanArrivalRate / MeanServiceRate;
 
             double sum = 0;
-            for (int n = 0; n < s; ++n)
+            for (int n = 0; n < NumberOfServers; ++n)
             {
-                sum += (System.Math.Pow(a, n) / Factorial(n));
+                sum += (System.Math.Pow(Load, n) / Factorial(n));
             }
-            double P0 = 1 / (sum + System.Math.Pow(a, s) / Factorial(s - 1) / (s - a));
+            double P0 = 1 / (sum + System.Math.Pow(Load, NumberOfServers) / Factorial(NumberOfServers - 1) / (NumberOfServers - Load));
 
-            m_Lq = P0 * System.Math.Pow(a, s) * rho / (Factorial(s) * System.Math.Pow(1 - a, 2));
-            m_Wq = Lq / MeanArrivalRate;
+            m_Lq = P0 * System.Math.Pow(Load, NumberOfServers) * UtilitizationFactor / (Factorial(NumberOfServers) * System.Math.Pow(1 - Load, 2));
+            m_Wq = ExpectedQueueLength / MeanArrivalRate;
 
-            m_W = Wq + 1 / mu;
-            m_L = Lq + a;
+            m_W = ExpectedWaitingTimeInQueue + 1 / MeanServiceRate;
+            m_L = ExpectedQueueLength + Load;
 
             m_PWq0 = P0;
-            for (int n = 1; n < s; ++n)
+            for (int n = 1; n < NumberOfServers; ++n)
             {
-                double P_n = System.Math.Pow(a, n) * P0 / Factorial(n);
+                double P_n = System.Math.Pow(Load, n) * P0 / Factorial(n);
                 m_PWq0 += P_n;
             }
         }
 
         public override double GetFractionOfServicesMeetingAnswerTime(double t)
         {
-            return 1 - (1 - PWq0) * System.Math.Exp(-mu * (s - a) * t);
+            return 1 - (1 - ProbabilityForNoWaitingTimeInQueue) * System.Math.Exp(-MeanServiceRate * (NumberOfServers - Load) * t);
         }
 
         public override double GetGradeOfService()
