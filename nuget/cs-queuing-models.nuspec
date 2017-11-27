@@ -12,7 +12,7 @@
     <description>Queueing Models</description>
     <releaseNotes>Queueing Models in .NET 4.5.2</releaseNotes>
     <copyright>Copyright 2017</copyright>
-    <tags>Queueing Theory, Queueing Models, Erlang-B, Erlang-C, MMs, Extended Erlang-B, c-sharp</tags>
+    <tags>Queueing Theory, Queueing Models, Erlang-B, Erlang-C, MMs, MC Model, Extended Erlang-B, c-sharp</tags>
     <dependencies>
       
     </dependencies>

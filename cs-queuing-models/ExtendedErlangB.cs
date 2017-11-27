@@ -19,9 +19,9 @@ namespace QueueingModels
 
         //Grade of Service, aka, probability of delay
         //the probability that an arbitrary caller finds all servers/agents occupied
-        public override double GetGoS()
+        public override double GetGradeOfService()
         {
-            return ExtendedErlangBFormula(a, s, retry_rate);
+            return ExtendedErlangBFormula(Load, NumberOfServers, retry_rate);
         }
 
         public static double ExtendedErlangBFormula(double load, int number_of_servers, double R)
@@ -60,15 +60,15 @@ namespace QueueingModels
         }
 
         //since extended erlang b assumes call is either dropped or retry instead of putting in the queue, therefore, the AWT-based TSF is not applicable and the 
-        public override double GetTSF(double AWT)
+        public override double GetFractionOfServicesMeetingAnswerTime(double AWT)
         {
             throw new NotImplementedException();
         }
 
         //average waiting time, the average amount of time that calls spend waiting
-        public override double GetASA()
+        public override double GetAverageWaitingTime()
         {
-            return GetGoS() * beta / (s - a);
+            return GetGradeOfService() * AverageServiceTimeOfCalls / (NumberOfServers - Load);
         }
     }
 }

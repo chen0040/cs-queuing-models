@@ -10,7 +10,7 @@ namespace QueueingModels
     {
         //the number of service calls that enter on average per time unit 
         private double m_lambda;
-        public double lambda
+        public double NumberOfServiceCallsOnAveragePerTimeUnit
         {
             get { return m_lambda; }
             set { m_lambda = value; }
@@ -18,7 +18,7 @@ namespace QueueingModels
 
         //the average service time of calls or average holding time 
         private double m_beta;
-        public double beta
+        public double AverageServiceTimeOfCalls
         {
             get { return m_beta; }
             set { m_beta = value; }
@@ -26,15 +26,14 @@ namespace QueueingModels
 
         //load=lambda * beta
         private double m_a;
-        public double a
+        public double Load
         {
             get { return m_a; }
-            set { m_a = value; }
         }
 
         //number of servers/agents
         private int m_s;
-        public int s
+        public int NumberOfServers
         {
             get { return m_s; }
             set { m_s = value; }
@@ -42,14 +41,14 @@ namespace QueueingModels
 
         public override void Build()
         {
-            m_a = lambda * beta;
+            m_a = NumberOfServiceCallsOnAveragePerTimeUnit * AverageServiceTimeOfCalls;
         }
 
         //Grade of Service, aka, probability of delay
         //the probability that an arbitrary caller finds all servers/agents occupied
-        public override double GetGoS()
+        public override double GetGradeOfService()
         {
-            return ErlangBFormula(a, s);
+            return ErlangBFormula(Load, NumberOfServers);
         }
 
         public static double ErlangBFormula(double load, int number_of_servers)
@@ -63,15 +62,15 @@ namespace QueueingModels
             return c / (sum + c);
         }
 
-        public override double GetTSF(double AWT)
+        public override double GetFractionOfServicesMeetingAnswerTime(double AWT)
         {
             throw new NotImplementedException();
         }
 
         //average waiting time, the average amount of time that calls spend waiting
-        public virtual double GetASA()
+        public virtual double GetAverageWaitingTime()
         {
-            return GetGoS() * beta / (s - a);
+            return GetGradeOfService() * AverageServiceTimeOfCalls / (NumberOfServers - Load);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace QueueingModels
     {
         //mean arrival rate (expected number of arrivals per unit time) of new customers
         protected double m_lambda;
-        public double lambda
+        public double MeanArrivalRate
         {
             get
             {
@@ -121,8 +121,8 @@ namespace QueueingModels
 
         public override void Build()
         {
-            m_rho = lambda / (s * mu);
-            m_a = lambda / mu;
+            m_rho = MeanArrivalRate / (s * mu);
+            m_a = MeanArrivalRate / mu;
 
             double sum = 0;
             for (int n = 0; n < s; ++n)
@@ -132,7 +132,7 @@ namespace QueueingModels
             double P0 = 1 / (sum + System.Math.Pow(a, s) / Factorial(s - 1) / (s - a));
 
             m_Lq = P0 * System.Math.Pow(a, s) * rho / (Factorial(s) * System.Math.Pow(1 - a, 2));
-            m_Wq = Lq / lambda;
+            m_Wq = Lq / MeanArrivalRate;
 
             m_W = Wq + 1 / mu;
             m_L = Lq + a;
@@ -145,12 +145,12 @@ namespace QueueingModels
             }
         }
 
-        public override double GetTSF(double t)
+        public override double GetFractionOfServicesMeetingAnswerTime(double t)
         {
             return 1 - (1 - PWq0) * System.Math.Exp(-mu * (s - a) * t);
         }
 
-        public override double GetGoS()
+        public override double GetGradeOfService()
         {
             throw new NotImplementedException();
         }

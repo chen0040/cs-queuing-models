@@ -14,7 +14,7 @@ namespace QueueingModels
 
         //the number of service calls that enter on average per time unit 
         private double m_lambda;
-        public double lambda
+        public double NumberOfServiceCallsOnAveragePerTimeUnit
         {
             get { return m_lambda; }
             set { m_lambda = value; }
@@ -90,7 +90,7 @@ namespace QueueingModels
             }
         }
 
-        public override double GetTSF(double AWT)
+        public override double GetFractionOfServicesMeetingAnswerTime(double AWT)
         {
             var result = (from w in m_waiting_times
                           where w <= AWT
@@ -98,7 +98,7 @@ namespace QueueingModels
             return (double)result.Count() / m_waiting_times.Count;
         }
 
-        public override double GetGoS()
+        public override double GetGradeOfService()
         {
             throw new NotImplementedException();
         }
