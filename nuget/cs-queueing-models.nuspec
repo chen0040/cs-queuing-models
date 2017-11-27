@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>cs-queuing-models</id>
+    <id>cs-queueing-models</id>
     <version>1.0.1</version>
     <authors>chen0040</authors>
     <owners>chen0040</owners>
