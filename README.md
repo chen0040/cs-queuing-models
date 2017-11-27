@@ -2,6 +2,13 @@
 
 Queueing Models implemented in .NET
 
+# Features
+
+* Erlang-B
+* Extended Erlang-B
+* Erlang-C
+* MMs
+
 # Usage
 
 ### Erlang-B
